@@ -160,7 +160,7 @@ Button bt=(Button) getActivity().findViewById(R.id.bt4);
                     e.printStackTrace();
                 }
                 try {
-                    Thread.sleep(150);
+                    Thread.sleep(250);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

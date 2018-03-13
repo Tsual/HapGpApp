@@ -24,7 +24,7 @@ public class selectclassActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectclass);
-
+        setTitle("选择课程");
         Button bt=(Button)findViewById(R.id.bt3);
         bt.setOnClickListener(new View.OnClickListener() {
 

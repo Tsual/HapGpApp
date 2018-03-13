@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.asus.gp1.Helper.RequestUtil;
@@ -24,6 +26,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -245,14 +249,37 @@ public class ClassFragment extends Fragment {
 
 
     private void deallist(ArrayList<HashMap<String, Object>> listItem){
-        TextView tv=(TextView) getActivity().findViewById(R.id.infos2);
-        String str="您选择的课程 ：\n";
-        for(HashMap<String, Object> m:listItem){
-            for(String key:m.keySet()){
-                str+=key+":"+m.get(key)+"\n";
+        ListView listView_main_news = (ListView) getActivity().findViewById(R.id.std_listview);
+        List<Map<String, String>> list = new ArrayList<>();
+
+        for (HashMap<String, Object> m : listItem) {
+            String str1 = "";
+            String str2 = "";
+            for (String key : m.keySet()) {
+                if ("课程名称".equals(key))
+                    str1 += key + ":" + m.get(key) + "\n";
+                else
+                    str2 += key + ":" + m.get(key) + "\n";
             }
-            str+="\n";
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("t1", str1);
+            map.put("t2", str2);
+            list.add(map);
         }
-        tv.setText(str);
+
+        if(list.size()==0){
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("t1", "您没有创建任何课程，请添加");
+            map.put("t1", "");
+            list.add(map);
+        }
+
+        // 定义SimpleAdapter适配器。
+        // 使用SimpleAdapter来作为ListView的适配器，比ArrayAdapter能展现更复杂的布局效果。为了显示较为复杂的ListView的item效果，需要写一个xml布局文件，来设置ListView中每一个item的格式。
+        SimpleAdapter adapter = new SimpleAdapter(getActivity(), list,
+                android.R.layout.simple_list_item_2
+                , new String[]{"t1", "t2"},
+                new int[]{android.R.id.text1, android.R.id.text2});
+        listView_main_news.setAdapter(adapter);
     }
 }
