@@ -1,6 +1,7 @@
 package com.example.asus.gp1;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -44,6 +45,9 @@ public class addclassActivity extends AppCompatActivity {
                 m.put("south","0");
                 m.put("north","0");
 
+                final boolean[] dealtoken = {false};
+                final String[] msgstr = {""};
+
                 try {
                     RequestUtil.AddProject(m,new Handler(){
                         @Override
@@ -58,7 +62,8 @@ public class addclassActivity extends AppCompatActivity {
                                     startActivity( in );
                                 }else
                                 {
-                                    Toast.makeText(getBaseContext(),(String)json.get("message"),Toast.LENGTH_LONG);
+                                    dealtoken[0] =true;
+                                    msgstr[0] =(String)json.get("message");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -67,6 +72,13 @@ public class addclassActivity extends AppCompatActivity {
                     });
                 } catch (IOException e) {
                     return;
+                }
+
+                if(dealtoken[0]){
+                    AlertDialog.Builder builder  = new AlertDialog.Builder(addclassActivity.this);
+                    builder.setMessage(msgstr[0] ) ;
+                    builder.setPositiveButton("是" ,  null );
+                    builder.show();
                 }
             }
         });
