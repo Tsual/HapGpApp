@@ -173,8 +173,6 @@ public class stdinfoFragment extends Fragment {
     }
 
 
-
-
     @SuppressLint("MissingPermission")
     private void toggleGPS() {
         Intent gpsIntent = new Intent();
@@ -201,10 +199,10 @@ public class stdinfoFragment extends Fragment {
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     1);
         }
-        locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             getLocation();
             //gps已打开
@@ -219,31 +217,31 @@ public class stdinfoFragment extends Fragment {
             }, 2000);
         }
 
-Button bt=(Button) getActivity().findViewById(R.id.bt4);
+        Button bt = (Button) getActivity().findViewById(R.id.bt4);
         bt.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                HashMap m=new HashMap();
-                m.put("lid",MetaData.LID);
-                m.put("pwd",MetaData.PWD);
-                m.put("x",""+longitude);
-                m.put("y",""+latitude);
+                HashMap m = new HashMap();
+                m.put("lid", MetaData.LID);
+                m.put("pwd", MetaData.PWD);
+                m.put("x", "" + longitude);
+                m.put("y", "" + latitude);
                 final boolean[] b = {false};
                 final String[] extmsg = {""};
                 try {
-                    RequestUtil.SignIn(m,new Handler(){
+                    RequestUtil.SignIn(m, new Handler() {
                         @Override
                         public void handleMessage(Message msg) {
-                            JSONObject json=null;
-                            String msgg=(String)msg.getData().get("value");
+                            JSONObject json = null;
+                            String msgg = (String) msg.getData().get("value");
                             try {
-                                json=new JSONObject(msgg);
+                                json = new JSONObject(msgg);
                                 if ("Success".equals(json.get("excuteResult"))) {
-                                    b[0] =true;
+                                    b[0] = true;
                                 } else {
-                                    extmsg[0] =(String)json.get("message");
-                                    b[0]=false;
+                                    extmsg[0] = (String) json.get("message");
+                                    b[0] = false;
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -258,10 +256,10 @@ Button bt=(Button) getActivity().findViewById(R.id.bt4);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if(!b[0]){
-                    AlertDialog.Builder builder  = new AlertDialog.Builder(getContext());
-                    builder.setMessage(extmsg[0] ) ;
-                    builder.setPositiveButton("是" ,  null );
+                if (!b[0]) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(extmsg[0]);
+                    builder.setPositiveButton("是", null);
                     builder.show();
                 }
             }
