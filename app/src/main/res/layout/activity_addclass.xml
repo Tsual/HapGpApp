@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.asus.gp1.addclassActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/class_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="课程名称"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/class_name1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="课程描述"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/class_name2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="星期"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/class_name3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="开始时间"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/class_name4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="结束时间"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/bt"
+                android:layout_width="match_parent"
+                android:layout_height="20pt"
+                android:layout_margin="5pt"
+                android:text="提交" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>
