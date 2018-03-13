@@ -1,5 +1,6 @@
 package com.example.asus.gp1;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +26,9 @@ public class selectclassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectclass);
         setTitle("选择课程");
+
+        final boolean[] exeRes = new boolean[]{true};
+        final String[] ErrMsg=new String[]{""};
         Button bt=(Button)findViewById(R.id.bt3);
         bt.setOnClickListener(new View.OnClickListener() {
 
@@ -47,7 +51,8 @@ public class selectclassActivity extends AppCompatActivity {
                                     in.setClassName(getApplicationContext(), "com.example.asus.gp1.MainActivity");
                                     startActivity(in);
                                 } else {
-                                    Toast.makeText(getBaseContext(), (String) json.get("message"), Toast.LENGTH_LONG);
+                                    exeRes[0]=false;
+                                    ErrMsg[0]=(String) json.get("message");
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -56,6 +61,12 @@ public class selectclassActivity extends AppCompatActivity {
                     });
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+                if(!exeRes[0]){
+                    AlertDialog.Builder builder  = new AlertDialog.Builder(selectclassActivity.this);
+                    builder.setMessage(ErrMsg[0] ) ;
+                    builder.setPositiveButton("是" ,  null );
+                    builder.show();
                 }
             }
         });
