@@ -10,11 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/test_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/test_textview"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/test_button"/>
 
 
 
