@@ -20,10 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONException;
@@ -251,14 +249,15 @@ public class stdinfoFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                String msgheader="当前签到位置["+longitude+":"+latitude+"]\n";
                 if (!b[0]) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage(extmsg[0]);
+                    builder.setMessage(msgheader+extmsg[0]);
+                    builder.setPositiveButton("是", null);
+                    builder.show();
+                }else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(msgheader+"签到成功");
                     builder.setPositiveButton("是", null);
                     builder.show();
                 }

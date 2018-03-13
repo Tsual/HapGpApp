@@ -23,7 +23,7 @@ public class RequestUtil {
     public static final String ApiRoute = "/api/API";
 
     public static void post(final String postStr, final Handler handler) throws IOException {
-        new Thread(new Runnable() {
+       Thread t= new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -48,7 +48,14 @@ public class RequestUtil {
                     handler.handleMessage(msg);
                 }
             }
-        }).start();
+        });
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void QueryClassTeacher(final Map m, final Handler handler) throws IOException {
@@ -56,6 +63,17 @@ public class RequestUtil {
                 "    \"lid\": \"" + m.get("lid") + "\",\n" +
                 "    \"pwd\": \"" + m.get("pwd") + "\",\n" +
                 "    \"operation\": \"TeacherQueryClass\",\n" +
+                "    \"Params\": {\n" +
+                "    }\n" +
+                "}";
+        post(poststring,handler);
+    }
+
+    public static void DoCheckNetWork(final Handler handler) throws IOException {
+        String poststring="{\t\n" +
+                "    \"lid\": \"\",\n" +
+                "    \"pwd\": \"\",\n" +
+                "    \"operation\": \"none\",\n" +
                 "    \"Params\": {\n" +
                 "    }\n" +
                 "}";

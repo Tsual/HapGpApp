@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONException;
@@ -31,7 +32,7 @@ public class addclassActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HashMap m=new HashMap();
-                m.put("lid",MetaData.LID);
+                m.put("lid", MetaData.LID);
                 m.put("pwd",MetaData.PWD);
                 m.put("projectname",((EditText)findViewById(R.id.class_name)).getText().toString());
                 m.put("subtitle",((EditText)findViewById(R.id.class_name1)).getText().toString());

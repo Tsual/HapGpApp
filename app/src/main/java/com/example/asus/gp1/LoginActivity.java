@@ -3,9 +3,9 @@ package com.example.asus.gp1;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.RemoteController;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -32,8 +32,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONException;
@@ -74,10 +74,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private boolean isNetWorkOpen=true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        try {
+            RequestUtil.DoCheckNetWork(new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    JSONObject json = null;
+                    String msgg = (String) msg.getData().get("value");
+                    if (msgg.startsWith("网络请求出错")) {
+                        isNetWorkOpen = false;
+                        return;
+                    }
+                }
+            });
+        }
+        catch (IOException e){
+            isNetWorkOpen = false;
+        }
+        if(!isNetWorkOpen){
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setMessage("服务器不可用 请检查网络设置");
+            builder.setPositiveButton("是", null);
+            builder.show();
+        }
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -336,6 +361,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             if(msgg.startsWith("网络请求出错")){
                                 b[0] =true;
                                 return;
+                            }else {
+                                isNetWorkOpen=true;
                             }
                             json=new JSONObject(msgg);
                             if("We cant find the Login ID".equals(json.get("message"))){
@@ -364,7 +391,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             catch (IOException e){
                 return false;
             }
-            if(b[0])return  false;
+            if(b[0]){
+                return  false;
+            }
             return true;
         }
 
@@ -376,8 +405,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                if(isNetWorkOpen){
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setMessage("服务器不可用 请检查网络设置");
+                    builder.setPositiveButton("是", null);
+                    builder.show();
+                }
             }
         }
 

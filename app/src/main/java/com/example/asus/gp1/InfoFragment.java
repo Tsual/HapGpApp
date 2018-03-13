@@ -10,13 +10,12 @@ import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
+import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONException;
@@ -89,16 +88,7 @@ public class InfoFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //tinfo_listview
         deallist(res[0]);
-
-//        TextView tv = (TextView) getActivity().findViewById(R.id.tv);
-//        tv.setText(res[0]);
         FloatingActionButton bt2=(FloatingActionButton)getActivity(). findViewById(R.id.floatingActionButton1);
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override

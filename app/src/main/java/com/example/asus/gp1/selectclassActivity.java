@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
+import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONException;
@@ -35,7 +35,7 @@ public class selectclassActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HashMap m=new HashMap();
-                m.put("lid",MetaData.LID);
+                m.put("lid", MetaData.LID);
                 m.put("pwd",MetaData.PWD);
                 m.put("projectname",((EditText)findViewById(R.id.et3)).getText().toString());
                 try {

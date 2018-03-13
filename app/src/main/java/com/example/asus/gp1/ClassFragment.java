@@ -9,13 +9,12 @@ import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
+import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONArray;
@@ -135,7 +134,7 @@ public class ClassFragment extends Fragment {
         final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 
         HashMap m=new HashMap();
-        m.put("lid",MetaData.LID);
+        m.put("lid", MetaData.LID);
         m.put("pwd",MetaData.PWD);
         try {
             RequestUtil.GetClass(m,new Handler(){
@@ -165,23 +164,12 @@ public class ClassFragment extends Fragment {
                     } catch (JSONException e) {
                         return;
                     }
-
-
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
         deallist(listItem);
-
-
         FloatingActionButton bt2=(FloatingActionButton)getActivity(). findViewById(R.id.floatingActionButton2);
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,60 +179,6 @@ public class ClassFragment extends Fragment {
                 startActivity( in );
             }
         });
-
-
-//        ListView list =getActivity().findViewById(R.id.ListView1);
-//
-////{"课程ID":"5","课程日程":"Saturday","课程名称":"test class 2","课程描述":"test subtitle","课程开始时间":"1:00","课程结束时间":"4:00"}
-//
-//        BaseAdapter listItemAdapter = new BaseAdapter(){
-//            @Override
-//            public int getCount() {
-//                return listItem.size();
-//            }
-//
-//            @Override
-//            public Object getItem(int i) {
-//                return listItem.get(i);
-//            }
-//
-//            @Override
-//            public long getItemId(int i) {
-//                return i;
-//            }
-//
-//            @Override
-//            public View getView(int i, View view, ViewGroup viewGroup) {
-//                List<String> strs=new ArrayList<>();
-//                for(String str:listItem.get(i).keySet())
-//                {
-//                    strs.add(str+":"+(String)listItem.get(i).get(str));
-//                }
-//                return new ClassView(getContext(),strs.get(0),strs.get(1),strs.get(2),strs.get(3),strs.get(4),strs.get(5));
-//            }
-//        };
-
-//        list.setAdapter(listItemAdapter);
-//                        //添加点击
-//                        list.setOnItemClickListener(new OnItemClickListener() {
-//
-//                            @Override
-//                            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-//                                                    long arg3) {
-//                                setTitle("点击第"+arg2+"个项目");
-//                            }
-//                        });
-//
-//                        //添加长按点击
-//                        list.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-//
-//                            @Override
-//                            public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
-//                                menu.setHeaderTitle("长按菜单-ContextMenu");
-//                                menu.add(0, 0, 0, "弹出长按菜单0");
-//                                menu.add(0, 1, 0, "弹出长按菜单1");
-//                            }
-//                        });
     }
 
 

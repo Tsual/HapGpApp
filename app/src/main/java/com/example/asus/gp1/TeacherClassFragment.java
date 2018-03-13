@@ -8,22 +8,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
+import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,7 +77,7 @@ public class TeacherClassFragment extends Fragment {
         final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 
         HashMap m=new HashMap();
-        m.put("lid",MetaData.LID);
+        m.put("lid", MetaData.LID);
         m.put("pwd",MetaData.PWD);
         try {
             RequestUtil.QueryClassTeacher(m,new Handler(){
@@ -116,11 +112,6 @@ public class TeacherClassFragment extends Fragment {
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            Thread.sleep(250);
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
