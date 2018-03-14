@@ -80,6 +80,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Button btip=findViewById(R.id.login_netset);
+        btip.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent();
+                in.setClassName( getApplicationContext(), "com.example.asus.gp1.Main2Activity" );
+                startActivity( in );
+            }
+        });
+
         try {
             RequestUtil.DoCheckNetWork(new Handler() {
                 @Override

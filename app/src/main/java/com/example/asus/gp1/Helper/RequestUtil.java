@@ -23,12 +23,13 @@ public class RequestUtil {
     public static final String ApiRoute = "/api/API";
 
     public static void post(final String postStr, final Handler handler) throws IOException {
-       Thread t= new Thread(new Runnable() {
+        final boolean[] extb=new boolean[]{false};
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
-                    String strurl = "http://" + IP +":"+ Port + ApiRoute;
+                    String strurl = "http://" + IP + ":" + Port + ApiRoute;
                     HttpPost request = new HttpPost(strurl);
                     request.addHeader("Content-Type", "application/json");
                     StringEntity se = new StringEntity(postStr);
@@ -39,23 +40,33 @@ public class RequestUtil {
                     data.putString("value", result);
                     Message msg = new Message();
                     msg.setData(data);
+                    extb[0] = true;
                     handler.handleMessage(msg);
+
                 } catch (Exception ex) {
                     Bundle data = new Bundle();
                     data.putString("value", "网络请求出错:" + ex.getMessage());
                     Message msg = new Message();
                     msg.setData(data);
+                    extb[0] = true;
                     handler.handleMessage(msg);
                 }
             }
         });
         t.start();
         try {
-            t.join();
+            t.join(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        if (!extb[0]) {
+            Bundle data = new Bundle();
+            data.putString("value", "网络请求出错:");
+            Message msg = new Message();
+            msg.setData(data);
+            extb[0] = true;
+            handler.handleMessage(msg);
+        }
     }
 
     public static void QueryClassTeacher(final Map m, final Handler handler) throws IOException {
