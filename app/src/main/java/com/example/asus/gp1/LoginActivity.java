@@ -405,7 +405,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if(b[0]){
                 return  false;
             }
-            return true;
+            return false;
         }
 
         @Override
