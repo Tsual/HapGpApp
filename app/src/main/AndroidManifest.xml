@@ -38,12 +38,11 @@
         <activity
             android:name=".RegistActivity2"
             android:label="添加课程" />
-        <activity android:name=".addclassActivity"></activity>
+        <activity android:name=".addclassActivity" />
         <activity android:name=".teachersignActivity" />
         <activity android:name=".selectclassActivity" />
-        <activity android:name=".testActivity">
-
-        </activity>
+        <activity android:name=".testActivity"></activity>
+        <activity android:name=".Main2Activity"></activity>
     </application>
 
 </manifest>

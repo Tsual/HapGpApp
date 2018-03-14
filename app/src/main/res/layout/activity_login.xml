@@ -39,10 +39,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
-android:text="teacher@qq.com"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:text="teacher@qq.com" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -52,7 +52,6 @@ android:text="teacher@qq.com"
 
                 <EditText
                     android:id="@+id/password"
-android:text="teacherteacher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
@@ -61,7 +60,8 @@ android:text="teacherteacher"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:text="teacherteacher" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -72,6 +72,15 @@ android:text="teacherteacher"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/login_netset"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="修改网络配置"
                 android:textStyle="bold" />
 
         </LinearLayout>
