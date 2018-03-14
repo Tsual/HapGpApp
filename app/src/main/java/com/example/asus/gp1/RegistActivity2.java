@@ -51,6 +51,26 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class RegistActivity2 extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+    final boolean[] b = {false};
+
+    Handler registhandler=new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            msg.getData().get("value");
+            JSONObject json = null;
+            try {
+                json = new JSONObject((String) msg.getData().get("value"));
+                if ("Success".equals(json.get("excuteResult"))) {
+                    b[0] =true;
+                    Intent in = new Intent();
+                    in.setClassName(getApplicationContext(), "com.example.asus.gp1.LoginActivity");
+                    startActivity(in);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -327,26 +347,10 @@ public class RegistActivity2 extends AppCompatActivity implements LoaderCallback
             m.put("name", r3.getText().toString());
             if (r4.getShowText())
                 m.put("teacher", "1");
-            final boolean[] b = {false};
+
+            b[0]=false;
             try {
-                RequestUtil.Regist(m, new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
-                        msg.getData().get("value");
-                        JSONObject json = null;
-                        try {
-                            json = new JSONObject((String) msg.getData().get("value"));
-                            if ("Success".equals(json.get("excuteResult"))) {
-                                b[0] =true;
-                                Intent in = new Intent();
-                                in.setClassName(getApplicationContext(), "com.example.asus.gp1.LoginActivity");
-                                startActivity(in);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                RequestUtil.Regist(m,registhandler );
             } catch (IOException e) {
                 return false;
             }

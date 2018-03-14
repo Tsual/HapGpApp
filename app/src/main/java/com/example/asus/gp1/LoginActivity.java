@@ -36,6 +36,12 @@ import android.widget.TextView;
 import com.example.asus.gp1.Helper.MetaData;
 import com.example.asus.gp1.Helper.RequestUtil;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,6 +57,44 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+    final boolean[] b = {false};
+    String lid="";
+    String pwd="";
+    private Handler loginHandler=new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            JSONObject json=null;
+            try {
+                String msgg=(String)msg.getData().get("value");
+                if(msgg.startsWith("网络请求出错")){
+                    b[0] =true;
+                    return;
+                }else {
+                    isNetWorkOpen=true;
+                }
+                json=new JSONObject(msgg);
+                if("We cant find the Login ID".equals(json.get("message"))){
+                    Intent in = new Intent();
+                    in.setClassName( getApplicationContext(), "com.example.asus.gp1.RegistActivity2" );
+                    startActivity( in );
+                }else if("Success".equals(json.get("excuteResult"))){
+                    MetaData.isLogin=true;
+                    MetaData.LID=lid;
+                    MetaData.PWD=pwd;
+                    MetaData.LoginToken=(String)json.get("userLoginToken");
+                    JSONObject ext=(JSONObject)json.get("extResult");
+                    MetaData.Name=(String)ext.get("Name");
+                    MetaData.Role=(String)ext.get("Role");
+                    Intent in = new Intent();
+                    in.setClassName( getApplicationContext(), "com.example.asus.gp1.MainActivity" );
+                    startActivity( in );
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                b[0] =true;
+            }
+        }
+    };
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -355,49 +399,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             final AutoCompleteTextView r1 = (AutoCompleteTextView) findViewById(R.id.email);
             EditText r2 = (EditText) findViewById(R.id.password);
-            final String lid=r1.getText().toString();
-            final String pwd=r2.getText().toString();
+            lid=r1.getText().toString();
+            pwd=r2.getText().toString();
             final Map m = new HashMap();
             m.put("lid",lid);
             m.put("pwd", pwd);
 
-            final boolean[] b = {false};
+            b[0]=false;
             try {
-                RequestUtil.Login(m, new Handler() {
-                    @Override
-                    public void handleMessage(Message msg) {
-                        JSONObject json=null;
-                        try {
-                            String msgg=(String)msg.getData().get("value");
-                            if(msgg.startsWith("网络请求出错")){
-                                b[0] =true;
-                                return;
-                            }else {
-                                isNetWorkOpen=true;
-                            }
-                            json=new JSONObject(msgg);
-                            if("We cant find the Login ID".equals(json.get("message"))){
-                                Intent in = new Intent();
-                                in.setClassName( getApplicationContext(), "com.example.asus.gp1.RegistActivity2" );
-                                startActivity( in );
-                            }else if("Success".equals(json.get("excuteResult"))){
-                                MetaData.isLogin=true;
-                                MetaData.LID=lid;
-                                MetaData.PWD=pwd;
-                                MetaData.LoginToken=(String)json.get("userLoginToken");
-                                JSONObject ext=(JSONObject)json.get("extResult");
-                                MetaData.Name=(String)ext.get("Name");
-                                MetaData.Role=(String)ext.get("Role");
-                                Intent in = new Intent();
-                                in.setClassName( getApplicationContext(), "com.example.asus.gp1.MainActivity" );
-                                startActivity( in );
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            b[0] =true;
-                        }
-                    }
-                });
+                RequestUtil.Login(m, loginHandler);
             }
             catch (IOException e){
                 return false;
