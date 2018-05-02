@@ -16,8 +16,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class PostUtil {
-    public static String IP = RequestUtil.IP;
-    public static String Port = RequestUtil.Port;
+    public static final String IP = RequestUtil.IP;
+    public static final String Port = RequestUtil.Port;
     public static final String ApiRoute = RequestUtil.ApiRoute;
     public Context AlertContext;
 
@@ -80,49 +80,117 @@ public class PostUtil {
         }
     }
 
-
+    //QueryMission
     public void missionQueryStudent(final Handler handler, String LID, String PWD) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"QueryMission\",\n" +
+                "    \"Params\": {\n" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //QueryMission
     public void missionQueryTeacher(final Handler handler, String LID, String PWD) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"QueryMission\",\n" +
+                "    \"Params\": {\n" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //FinishMission
     public void missionFinishStudent(final Handler handler, String LID, String PWD, int missionID) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"FinishMission\",\n" +
+                "    \"Params\": {\n" +
+                "    \"MissionID\":\"" + missionID + "\"" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //CreateMission
     public void missionCreateTeacher(final Handler handler, String LID, String PWD, int classID, String missionName) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"CreateMission\",\n" +
+                "    \"Params\": {\n" +
+                "    \"classID\": \"" + classID + "\",\n" +
+                "    \"Name\":\"" + missionName + "\"" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //QueryLeave
     public void leaveQueryStudent(final Handler handler, String LID, String PWD) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"QueryLeave\",\n" +
+                "    \"Params\": {\n" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //QueryLeave
     public void leaveQueryTeacher(final Handler handler, String LID, String PWD) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"QueryLeave\",\n" +
+                "    \"Params\": {\n" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //CancelLeave
     public void leaveCancelStudent(final Handler handler, String LID, String PWD, int leaveID) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"CancelLeave\",\n" +
+                "    \"Params\": {\n" +
+                "    \"LeaveID\":\"" + leaveID + "\"" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //RequestLeave
     public void leaveRequestStudent(final Handler handler, String LID, String PWD, int classSelectID) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"RequestLeave\",\n" +
+                "    \"Params\": {\n" +
+                "    \"ClassSelectID\":\"" + classSelectID + "\"" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 
+    //ApproveLeave
     public void leaveApproveTeacher(final Handler handler, String LID, String PWD, int leaveID) {
-        String jsonstr = "";
+        String jsonstr = "{\t\n" +
+                "    \"lid\": \"" + LID + "\",\n" +
+                "    \"pwd\": \"" + PWD + "\",\n" +
+                "    \"operation\": \"ApproveLeave\",\n" +
+                "    \"Params\": {\n" +
+                "    \"LeaveID\":\"" + leaveID + "\"" +
+                "    }\n" +
+                "}";
         ApiInvoke(handler, RequestBody.create(MediaType.parse("application/json"), jsonstr));
     }
 }
