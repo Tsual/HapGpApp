@@ -46,7 +46,8 @@
         <activity android:name=".Test_Activity" />
         <activity android:name=".MissionCreateActivity" />
         <activity android:name=".LeaveViewActivity" />
-        <activity android:name=".MissionActivity"></activity>
+        <activity android:name=".MissionActivity" />
+        <activity android:name=".LeaveRequestActivity"></activity>
     </application>
 
 </manifest>

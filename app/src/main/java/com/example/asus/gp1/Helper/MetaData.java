@@ -9,4 +9,5 @@ public class MetaData {
     public static String Name="";
     public static String Role="";
     public static int MissionID=0;
+    public static String SSSID="";
 }

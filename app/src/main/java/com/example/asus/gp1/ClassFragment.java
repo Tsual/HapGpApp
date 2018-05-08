@@ -249,8 +249,12 @@ public class ClassFragment extends Fragment {
                         .setNegativeButton("请假", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int ii) {
-                                PostUtil post = new PostUtil(getContext());
-                                post.leaveRequestStudent(leaveRequestHandler, MetaData.LID, MetaData.PWD, list.get(i).get("SSSID"));
+                                Intent in = new Intent();
+                                in.setClassName(getActivity().getApplicationContext(), "com.example.asus.gp1.LeaveRequestActivity");
+                                startActivity(in);
+                                MetaData.SSSID = list.get(i).get("SSSID");
+//                                PostUtil post = new PostUtil(getContext());
+//                                post.leaveRequestStudent(leaveRequestHandler, MetaData.LID, MetaData.PWD, list.get(i).get("SSSID"));
                             }
                         })
                         .setTitle("请假吗")
