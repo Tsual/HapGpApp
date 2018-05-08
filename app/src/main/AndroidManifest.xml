@@ -41,8 +41,12 @@
         <activity android:name=".addclassActivity" />
         <activity android:name=".teachersignActivity" />
         <activity android:name=".selectclassActivity" />
-        <activity android:name=".testActivity"></activity>
-        <activity android:name=".Main2Activity"></activity>
+        <activity android:name=".testActivity" />
+        <activity android:name=".Main2Activity" />
+        <activity android:name=".Test_Activity" />
+        <activity android:name=".MissionCreateActivity" />
+        <activity android:name=".LeaveViewActivity" />
+        <activity android:name=".MissionActivity"></activity>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package com.example.asus.gp1;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,10 +13,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.example.asus.gp1.Helper.MetaData;
+import com.example.asus.gp1.Helper.PostUtil;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONArray;
@@ -126,82 +130,103 @@ public class ClassFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
 
+    Handler signinHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            JSONObject json = null;
+            String msgg = (String) msg.getData().get("value");
+            if (msgg.startsWith("网络请求出错")) {
+                return;
+            }
+            try {
+                json = new JSONObject(msgg);
+                JSONObject jslist = (JSONObject) json.get("extResult");
+                JSONArray jsar = (JSONArray) jslist.get("class");
+
+
+                for (int i = 0; i < jsar.length(); i++) {
+                    JSONObject jsobj = jsar.getJSONObject(i);
+                    Iterator<String> iterator = jsobj.keys();
+                    HashMap<String, Object> m = new HashMap<>();
+                    while (iterator.hasNext()) {
+                        String key = iterator.next();
+                        m.put(key, jsobj.get(key));
+                    }
+                    listItem.add(m);
+                }
+            } catch (JSONException e) {
+                return;
+            }
+        }
+    };
 
     @Override
     public void onStart() {
         super.onStart();
-        final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
-
-        HashMap m=new HashMap();
+        listItem.clear();
+        HashMap m = new HashMap();
         m.put("lid", MetaData.LID);
-        m.put("pwd",MetaData.PWD);
+        m.put("pwd", MetaData.PWD);
         try {
-            RequestUtil.GetClass(m,new Handler(){
-                @Override
-                public void handleMessage(Message msg) {
-                    JSONObject json=null;
-                    String msgg=(String)msg.getData().get("value");
-                    if(msgg.startsWith("网络请求出错")){
-                        return;
-                    }
-                    try {
-                        json=new JSONObject(msgg);
-                        JSONObject jslist=(JSONObject)json.get("extResult");
-                        JSONArray jsar=(JSONArray)jslist.get("class");
-
-
-                        for(int i=0;i<jsar.length();i++){
-                            JSONObject jsobj=jsar.getJSONObject(i);
-                            Iterator<String> iterator=jsobj.keys();
-                            HashMap<String,Object> m=new HashMap<>();
-                            while (iterator.hasNext()){
-                                String key=iterator.next();
-                                m.put(key,jsobj.get(key));
-                            }
-                            listItem.add(m);
-                        }
-                    } catch (JSONException e) {
-                        return;
-                    }
-                }
-            });
+            RequestUtil.GetClass(m, signinHandler);
         } catch (IOException e) {
             e.printStackTrace();
         }
         deallist(listItem);
-        FloatingActionButton bt2=(FloatingActionButton)getActivity(). findViewById(R.id.floatingActionButton2);
+        FloatingActionButton bt2 = (FloatingActionButton) getActivity().findViewById(R.id.floatingActionButton2);
         bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent in = new Intent();
-                in.setClassName( getContext(), "com.example.asus.gp1.selectclassActivity" );
-                startActivity( in );
+                in.setClassName(getContext(), "com.example.asus.gp1.selectclassActivity");
+                startActivity(in);
             }
         });
     }
 
+    Handler leaveRequestHandler = new Handler() {
+        String alert = "";
 
-    private void deallist(ArrayList<HashMap<String, Object>> listItem){
+        @Override
+        public String toString() {
+            return alert;
+        }
+
+        @Override
+        public void handleMessage(Message message) {
+            Bundle data = message.getData();
+            if (Boolean.FALSE.toString().equals(data.getString("result"))) {
+                alert = data.getString("cause");
+            }
+        }
+    };
+
+    private void deallist(ArrayList<HashMap<String, Object>> listItem) {
         ListView listView_main_news = (ListView) getActivity().findViewById(R.id.std_listview);
-        List<Map<String, String>> list = new ArrayList<>();
+        final List<Map<String, String>> list = new ArrayList<>();
 
         for (HashMap<String, Object> m : listItem) {
             String str1 = "";
             String str2 = "";
+            Map<String, String> map = new HashMap<String, String>();
             for (String key : m.keySet()) {
+                if ("SSSID".equals(key)) {
+                    map.put("SSSID", m.get(key) + "");
+                    continue;
+                }
                 if ("课程名称".equals(key))
                     str1 += key + ":" + m.get(key) + "\n";
                 else
                     str2 += key + ":" + m.get(key) + "\n";
             }
-            Map<String, String> map = new HashMap<String, String>();
             map.put("t1", str1);
             map.put("t2", str2);
             list.add(map);
         }
 
-        if(list.size()==0){
+        if (list.size() == 0) {
             Map<String, String> map = new HashMap<String, String>();
             map.put("t1", "您没有创建任何课程，请添加");
             map.put("t1", "");
@@ -215,5 +240,22 @@ public class ClassFragment extends Fragment {
                 , new String[]{"t1", "t2"},
                 new int[]{android.R.id.text1, android.R.id.text2});
         listView_main_news.setAdapter(adapter);
+        listView_main_news.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+
+                new AlertDialog.Builder(getContext())
+                        .setPositiveButton("返回", null)
+                        .setNegativeButton("请假", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int ii) {
+                                PostUtil post = new PostUtil(getContext());
+                                post.leaveRequestStudent(leaveRequestHandler, MetaData.LID, MetaData.PWD, list.get(i).get("SSSID"));
+                            }
+                        })
+                        .setTitle("请假吗")
+                        .show();
+            }
+        });
     }
 }

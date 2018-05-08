@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -105,7 +106,7 @@ public class PostUtil {
     }
 
     //FinishMission
-    public void missionFinishStudent(final Handler handler, String LID, String PWD, int missionID) {
+    public void missionFinishStudent(final Handler handler, String LID, String PWD, String missionID) {
         String jsonstr = "{\t\n" +
                 "    \"lid\": \"" + LID + "\",\n" +
                 "    \"pwd\": \"" + PWD + "\",\n" +
@@ -169,7 +170,7 @@ public class PostUtil {
     }
 
     //RequestLeave
-    public void leaveRequestStudent(final Handler handler, String LID, String PWD, int classSelectID) {
+    public void leaveRequestStudent(final Handler handler, String LID, String PWD, String classSelectID) {
         String jsonstr = "{\t\n" +
                 "    \"lid\": \"" + LID + "\",\n" +
                 "    \"pwd\": \"" + PWD + "\",\n" +

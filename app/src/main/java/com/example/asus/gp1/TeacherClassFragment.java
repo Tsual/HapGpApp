@@ -1,6 +1,8 @@
 package com.example.asus.gp1;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,10 +13,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.example.asus.gp1.Helper.MetaData;
+import com.example.asus.gp1.Helper.PostUtil;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONArray;
@@ -193,18 +197,20 @@ public class TeacherClassFragment extends Fragment {
 
     private void deallist(ArrayList<HashMap<String, Object>> listItem){
         ListView listView_main_news = (ListView) getActivity().findViewById(R.id.tcf_listview);
-        List<Map<String, String>> list = new ArrayList<>();
+        final List<Map<String, String>> list = new ArrayList<>();
 
         for (HashMap<String, Object> m : listItem) {
             String str1 = "";
             String str2 = "";
+            Map<String, String> map = new HashMap<String, String>();
             for (String key : m.keySet()) {
+                if("课程ID".equals(key))
+                    map.put("ID",m.get(key)+"");
                 if ("课程名称".equals(key))
                     str1 += key + ":" + m.get(key) + "\n";
                 else
                     str2 += key + ":" + m.get(key) + "\n";
             }
-            Map<String, String> map = new HashMap<String, String>();
             map.put("t1", str1);
             map.put("t2", str2);
             list.add(map);
@@ -224,6 +230,25 @@ public class TeacherClassFragment extends Fragment {
                 , new String[]{"t1", "t2"},
                 new int[]{android.R.id.text1, android.R.id.text2});
         listView_main_news.setAdapter(adapter);
+        listView_main_news.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                MetaData.MissionID=Integer.parseInt(list.get(i).get("ID"));
+                new AlertDialog.Builder(getContext())
+                        .setPositiveButton("返回", null)
+                        .setNegativeButton("创建", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int ii) {
+                                Intent in = new Intent();
+                                in.setClassName(getActivity().getApplicationContext(), "com.example.asus.gp1.MissionCreateActivity");
+                                startActivity(in);
+                            }
+                        })
+                        .setTitle("为课程（ID："+MetaData.MissionID+"）创建任务")
+                        .show();
+
+            }
+        });
     }
 
     @Override

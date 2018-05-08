@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,16 +20,24 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.example.asus.gp1.Helper.MetaData;
+import com.example.asus.gp1.Helper.PostUtil;
 import com.example.asus.gp1.Helper.RequestUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -191,6 +200,9 @@ public class stdinfoFragment extends Fragment {
         }
     }
 
+    final ArrayList<HashMap<String, Object>> listItem = new ArrayList<HashMap<String, Object>>();
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -249,21 +261,163 @@ public class stdinfoFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                String msgheader="当前签到位置["+longitude+":"+latitude+"]\n";
+                String msgheader = "当前签到位置[" + longitude + ":" + latitude + "]\n";
                 if (!b[0]) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage(msgheader+extmsg[0]);
+                    builder.setMessage(msgheader + extmsg[0]);
                     builder.setPositiveButton("是", null);
                     builder.show();
-                }else {
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setMessage(msgheader+"签到成功");
+                    builder.setMessage(msgheader + "签到成功");
                     builder.setPositiveButton("是", null);
                     builder.show();
                 }
             }
         });
-
+        refreshMission();
 
     }
+
+    void refreshMission() {
+        listItem.clear();
+        PostUtil post = new PostUtil(getContext());
+        post.missionQueryStudent(missionQueryHandler, MetaData.LID, MetaData.PWD);
+        deallist();
+    }
+
+    Handler missionQueryHandler = new Handler() {
+        String alert = "";
+
+        @Override
+        public String toString() {
+            return alert;
+        }
+
+        @Override
+        public void handleMessage(Message message) {
+            Bundle data = message.getData();
+            if (Boolean.FALSE.toString().equals(data.getString("result"))) {
+                alert = data.getString("cause");
+            }
+
+            String jsonString = data.getString("value");
+            try {
+                JSONObject json = new JSONObject(jsonString);
+                if ("Error".equals(json.getString("excuteResult"))) {
+                    alert = json.getString("message");
+                } else {
+                    JSONObject jslist = (JSONObject) json.get("extResult");
+                    Iterator<String> iterator = jslist.keys();
+                    while (iterator.hasNext()) {
+                        String key = iterator.next();
+                        JSONObject missionjson = (JSONObject) jslist.get(key);
+                        Iterator<String> iterator2 = missionjson.keys();
+                        HashMap<String, Object> m2 = new HashMap<>();
+
+                        while (iterator2.hasNext()) {
+                            String key2 = iterator2.next();
+                            m2.put(key2, missionjson.get(key2));
+                        }
+                        listItem.add(m2);
+
+                    }
+//                    Intent in = new Intent();
+//                    in.setClassName( getApplicationContext(), "com.example.asus.fpappdemo.DetailActivity" );
+//                    startActivity( in );
+                }
+            } catch (Exception ex) {
+                alert = "返回报文出错:" + ex.getMessage();
+            }
+        }
+    };
+
+    private void deallist() {
+        ListView listView_main_news = (ListView) getActivity().findViewById(R.id.std_mission_listview);
+        final List<Map<String, String>> list = new ArrayList<>();
+
+        for (HashMap<String, Object> m : listItem) {
+            String str1 = "";
+            String str2 = "";
+            Map<String, String> map = new HashMap<String, String>();
+            for (String key : m.keySet()) {
+                if ("Name".equals(key))
+                    str1 += "任务名称:" + m.get(key) + "\n";
+                else if ("MissionID".equals(key)){
+                    str2 += "任务ID:" + m.get(key) + "\n";
+                    map.put("ID",m.get(key)+"");
+                }
+                else if ("IsFinish".equals(key)) {
+                    if ("false".equals(m.get(key)))
+                        str2 += "完成情况:未完成\n";
+                    else
+                        str2 += "完成情况:已完成\n";
+                }
+            }
+            map.put("t1", str1);
+            map.put("t2", str2);
+            list.add(map);
+        }
+
+        if (list.size() == 0) {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("t1", "您没有创建任何课程，请添加");
+            map.put("t1", "");
+            list.add(map);
+        }
+
+        // 定义SimpleAdapter适配器。
+        // 使用SimpleAdapter来作为ListView的适配器，比ArrayAdapter能展现更复杂的布局效果。为了显示较为复杂的ListView的item效果，需要写一个xml布局文件，来设置ListView中每一个item的格式。
+        SimpleAdapter adapter = new SimpleAdapter(getActivity(), list,
+                android.R.layout.simple_list_item_2
+                , new String[]{"t1", "t2"},
+                new int[]{android.R.id.text1, android.R.id.text2});
+        listView_main_news.setAdapter(adapter);
+        listView_main_news.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+
+                new AlertDialog.Builder(getContext())
+                        .setPositiveButton("点错了", null)
+                        .setNegativeButton("完成！", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int ii) {
+                                PostUtil post = new PostUtil(getContext());
+                                post.missionFinishStudent(missionFinishHandler, MetaData.LID, MetaData.PWD, ((Map<String, String>)list.get(i)).get("ID"));
+                            }
+                        })
+                        .setTitle("完成任务？")
+                        .show();
+            }
+        });
+    }
+
+    Handler missionFinishHandler = new Handler() {
+        String alert = "";
+
+        @Override
+        public String toString() {
+            return alert;
+        }
+
+        @Override
+        public void handleMessage(Message message) {
+            Bundle data = message.getData();
+            if (Boolean.FALSE.toString().equals(data.getString("result"))) {
+                alert = data.getString("cause");
+            }
+
+            String jsonString = data.getString("value");
+            try {
+                JSONObject json = new JSONObject(jsonString);
+                if ("Error".equals(json.getString("excuteResult"))) {
+                    alert=json.getString("message");
+                } else {
+
+                }
+            } catch (Exception ex) {
+                alert="返回报文出错:" + ex.getMessage();
+            }
+        }
+    };
 }

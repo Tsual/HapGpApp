@@ -1,12 +1,14 @@
 package com.example.asus.gp1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.asus.gp1.Helper.MetaData;
@@ -37,17 +39,45 @@ public class HomeFragment extends Fragment {
 
     }
 
+    Button missionBt;
+    Button leaveBt;
+
     @Override
     public void onStart() {
         super.onStart();
+        missionBt = getActivity().findViewById(R.id.home_teacher_checkmission);
+        leaveBt = getActivity().findViewById(R.id.home_teacher_checkleave);
         TextView tv1 = (TextView) getView().findViewById(R.id.name);
         tv1.setText(MetaData.Name);
         TextView tv2 = (TextView) getView().findViewById(R.id.subview);
-        if(MetaData.Role.equals("Teacher")) tv2.setText("四度春风化绸缪，几番秋雨洗鸿沟。\n" +
-                "黑发积霜织日月，粉笔无言写春秋。\n" +
-                "蚕丝吐尽春未老，烛泪成灰秋更稠。\n" +
-                "春播桃李三千圃，秋来硕果满神州。");
-        else tv2.setText("同学你好");
+        if (MetaData.Role.equals("Teacher")) {
+            missionBt.setVisibility(View.VISIBLE);
+            leaveBt.setVisibility(View.VISIBLE);
+            missionBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent in = new Intent();
+                    in.setClassName(getActivity().getApplicationContext(), "com.example.asus.gp1.MissionActivity");
+                    startActivity(in);
+                }
+            });
+            leaveBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent in = new Intent();
+                    in.setClassName(getActivity().getApplicationContext(), "com.example.asus.gp1.LeaveViewActivity");
+                    startActivity(in);
+                }
+            });
+            tv2.setText("四度春风化绸缪，几番秋雨洗鸿沟。\n" +
+                    "黑发积霜织日月，粉笔无言写春秋。\n" +
+                    "蚕丝吐尽春未老，烛泪成灰秋更稠。\n" +
+                    "春播桃李三千圃，秋来硕果满神州。");
+        } else {
+            missionBt.setVisibility(View.INVISIBLE);
+            leaveBt.setVisibility(View.INVISIBLE);
+            tv2.setText("同学你好");
+        }
     }
 
     /**

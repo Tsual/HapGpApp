@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
                         setTitle("签到情况");
                         initf3();
                     } else {
-                        setTitle("签到系统");
+                        setTitle("签到&任務");
                         initf5();
                     }
                     return true;

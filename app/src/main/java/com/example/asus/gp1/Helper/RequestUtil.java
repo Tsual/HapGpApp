@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class RequestUtil {
-    public static  String IP = "192.168.0.118";
+    public static  String IP = "192.168.1.118";
     public static  String Port = "5555";
     public static final String ApiRoute = "/api/API";
 
